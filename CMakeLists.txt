@@ -19,8 +19,8 @@ set(serial "1.0.0")
 set(serial_so "1")
 
 #set include directories
-message("project directory : ${PROJECT_SOURCE_DIR}")
-include_directories(${PROJECT_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
+message("project directory : ${PROJECT_SOURCE_DIR}/src")
+include_directories(${PROJECT_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})
 
 #set sources
 set(opal_sources

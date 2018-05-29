@@ -1,14 +1,19 @@
 #include <iostream>
-#include "parser.hpp"
+#include "grammar/variable.hpp"
 
 int main() {
-    opal::core::parser::test<std::string::const_iterator> rule;
-    const std::string source = "2 + 3";
+    sapphire::core::parser::variable<std::string::const_iterator> rule;
+    const std::string source = "let hoge : int";
+    std::cout << "input : " << source << std::endl;
+    std::cout << "====================================" << std::endl;
     auto it = source.begin();
     const auto& end = source.end();
-    opal::core::parser::arithmetic_t result;
+    sapphire::core::ast::variable_t result;
     if(boost::spirit::qi::parse(it,end,rule,result) && it != end) {
         std::cout << "parse failed" << std::endl;
     }
-    std::cout << "test" << std::endl;
+    std::cout << "attr : " << result.attribute << std::endl;
+    std::cout << "name : " << result.name << std::endl;
+    std::cout << "type : " << result.type << std::endl;
+    std::cout << "init : " << result.initializer << std::endl;
 }
