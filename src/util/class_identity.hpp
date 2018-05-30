@@ -1,6 +1,6 @@
 #pragma once
-#include <cstdint>
 #include "util/inherit.hpp"
+#include <cstdint>
 
 namespace util {
     namespace class_identity_detail {

@@ -1,6 +1,4 @@
 cmake_minimum_required(VERSION 3.10)
-cmake_policy(PUSH)
-cmake_policy(SET CMP0057 NEW)
 
 include(${PROJECT_SOURCE_DIR}/cmake/DownloadProject/DownloadProject.cmake)
 download_project(PROJ googletest
@@ -13,7 +11,7 @@ add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 
 # Prevent overriding the parent project's compiler/linker
 # settings on Windows
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+# set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 set(test_sources
 test_variable.cpp
@@ -21,8 +19,11 @@ test_variable.cpp
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})
 
-include(GoogleTest)
 add_executable(sapphire_test ${test_sources})
-target_link_libraries(sapphire_test libsapphire gtest_main ${Boost_LIBRARIES})
+include(GoogleTest)
+if(sapphire_for_test)
+    target_link_libraries(sapphire_test sapphire_for_test gtest_main ${Boost_LIBRARIES})
+else()
+    target_link_libraries(sapphire_test gtest_main ${Boost_LIBRARIES})
+endif()
 gtest_add_tests(TARGET sapphire_test)
-cmake_policy(POP)
