@@ -15,12 +15,17 @@ message("project directory : ${PROJECT_SOURCE_DIR}/src")
 include_directories(${PROJECT_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})
 
 #set sources
+set(sapphire_sources_without_main
+)
 set(sapphire_sources
+${sapphire_sources_without_main}
 main.cpp
 )
 
 add_executable(sapphire ${sapphire_sources})
-add_library(libsapphire ${sapphire_sources})
+if(sapphire_sources_without_main)
+  add_library(sapphire_for_test STATIC ${sapphire_sources_without_main})
+endif()
 set_target_properties(sapphire PROPERTIES VERSION ${serial} SOVERSIN ${serial_so})
 
 #link libraries
