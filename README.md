@@ -1,7 +1,4 @@
-<style>
-img[alt=logo] { width: 20vw; }
-</style>
-# ![logo](./assets/logo.svg)
+# <img src="./assets/logo.svg" width="50%">
 compiler of sapphire by c++
 
 ## development
