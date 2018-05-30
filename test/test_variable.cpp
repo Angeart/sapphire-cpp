@@ -20,3 +20,9 @@ TEST(variable_test, normal_declaration) {
     ast::variable_t require = {"let", "test_01", "int", ""};
     EXPECT_EQ(require, parse("let test_01 : int"));
 }
+
+TEST(variable_test, auto_declaration) {
+    using namespace sapphire::core;
+    ast::variable_t require = {"let", "test_02", "auto", ""};
+    EXPECT_EQ(require, parse("let test_02"));
+}
