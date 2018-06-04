@@ -29,3 +29,10 @@ TEST(variable_test, auto_declaration) {
     ast::variable_t require = {variable_attribute::lazy, "test_02", "auto", "hoge"};
     ASSERT_EQ(require, parse("lazy test_02 := hoge;"));
 }
+
+TEST(variable_test, failed_declaration) {
+    using namespace sapphire::core;
+    using ::sapphire::core::types::variable_attribute;
+    ast::variable_t require = {};
+    ASSERT_EQ(require, parse("lazy test_02;"));
+}

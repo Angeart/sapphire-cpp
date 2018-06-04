@@ -1,6 +1,7 @@
 #pragma once
 #include "ast/variable.h"
 #include "skipper.hpp"
+#include "identify.hpp"
 #include <boost/fusion/include/std_tuple.hpp>
 #include <boost/spirit/include/phoenix.hpp>
 #include <boost/spirit/include/qi.hpp>
@@ -30,19 +31,19 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
             (
                 qi::omit[qi::lit(":=")] >>
                 skip >>
-                (qi::as_string[+(qi::char_ - qi::space - qi::lit(";"))][qi::_val = qi::_1])
+                (identifier[qi::_val = qi::_1])
             );
             type =
             (
                 qi::omit[qi::lit(":")] >>
                 skip >>
-                (qi::as_string[+(qi::char_ - qi::space - qi::lit("=") - qi::lit(";"))][qi::_val = qi::_1])
+                (identifier[qi::_val = qi::_1])
             );
             root =
             (
                 //deduced attribute variable
                 (
-                    qi::as_string[+(qi::char_ - qi::space - qi::lit("=") - qi::lit(";"))][(&qi::_val)->*&variable_t::name = qi::_1]
+                    identifier[(&qi::_val)->*&variable_t::name = qi::_1]
                     >> skip
                     >> -type[(&qi::_val)->*&variable_t::type = qi::_1]
                     >> initializer[(&qi::_val)->*&variable_t::initializer = qi::_1]
@@ -52,7 +53,7 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 | (
                     attribute[(&qi::_val)->*&variable_t::attribute = qi::_1]
                     >> one_skip
-                    >> qi::as_string[+(qi::char_ - qi::space - qi::lit("=") - qi::lit(";"))][(&qi::_val)->*&variable_t::name = qi::_1]
+                    >> identifier[(&qi::_val)->*&variable_t::name = qi::_1]
                     >> skip
                     >> initializer[(&qi::_val)->*&variable_t::initializer = qi::_1]
                     >> qi::eps[(&qi::_val)->*&variable_t::type = "auto"]
@@ -61,7 +62,7 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 | (
                     attribute[(&qi::_val)->*&variable_t::attribute = qi::_1]
                     >> one_skip
-                    >> qi::as_string[+(qi::char_ - qi::space - qi::lit("=") - qi::lit(";"))][(&qi::_val)->*&variable_t::name = qi::_1]
+                    >> identifier[(&qi::_val)->*&variable_t::name = qi::_1]
                     >> skip
                     >> type[(&qi::_val)->*&variable_t::type = qi::_1]
                     >> skip
@@ -74,6 +75,7 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
     private:
         skipper<iterator> skip;
         one_skipper<iterator> one_skip;
+        identify<iterator> identifier;
         boost::spirit::qi::rule<iterator, std::string()> initializer;
         boost::spirit::qi::rule<iterator, std::string()> type;
         boost::spirit::qi::rule<iterator, ::sapphire::core::ast::variable_t()> root;
