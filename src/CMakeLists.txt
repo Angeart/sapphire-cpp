@@ -6,6 +6,21 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 set(Boost_USE_MULTITHREADED ON)
 
+option(ENABLE_INCLUDE_WHAT_YOU_USE
+  "Enable include-what-you-use. Use include-what-you-use to sanitize header-include dependencies.\
+Using include-what-you-use can slow the compilation, so if the compilation is slow turn this off."
+  ON)
+
+if(ENABLE_INCLUDE_WHAT_YOU_USE)
+  find_program(INCLUDE_WHAT_YOU_USE include-what-you-use)
+  if(INCLUDE_WHAT_YOU_USE)
+    message(STATUS "Enable Include What You Use")
+    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE include-what-you-use)
+  else()
+    message(WARNING "Could not find includ-what-you-use")
+  endif()
+endif()
+
 # set version info
 set(serial "1.0.0")
 set(serial_so "1")
