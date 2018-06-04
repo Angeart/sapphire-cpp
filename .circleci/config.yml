@@ -34,7 +34,7 @@ jobs:
           name: build
           command: |
             cd build
-            ninja sapphire-test
+            ninja sapphire_test
       - run:
           name: test
           command: |
