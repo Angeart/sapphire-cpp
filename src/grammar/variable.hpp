@@ -51,7 +51,7 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 //attributed and deduced variable
                 | (
                     attribute[(&qi::_val)->*&variable_t::attribute = qi::_1]
-                    >> qi::omit[+qi::blank]
+                    >> one_skip
                     >> qi::as_string[+(qi::char_ - qi::space - qi::lit("=") - qi::lit(";"))][(&qi::_val)->*&variable_t::name = qi::_1]
                     >> skip
                     >> initializer[(&qi::_val)->*&variable_t::initializer = qi::_1]
@@ -60,7 +60,7 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 //typed variable
                 | (
                     attribute[(&qi::_val)->*&variable_t::attribute = qi::_1]
-                    >> qi::omit[+qi::blank]
+                    >> one_skip
                     >> qi::as_string[+(qi::char_ - qi::space - qi::lit("=") - qi::lit(";"))][(&qi::_val)->*&variable_t::name = qi::_1]
                     >> skip
                     >> type[(&qi::_val)->*&variable_t::type = qi::_1]
@@ -68,11 +68,12 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                     >> -initializer[(&qi::_val)->*&variable_t::initializer = qi::_1]
                 )
             ) >>
-            qi::omit[*qi::blank] >>
+            skip >>
             qi::omit[qi::lit(";")];
         }
     private:
         skipper<iterator> skip;
+        one_skipper<iterator> one_skip;
         boost::spirit::qi::rule<iterator, std::string()> initializer;
         boost::spirit::qi::rule<iterator, std::string()> type;
         boost::spirit::qi::rule<iterator, ::sapphire::core::ast::variable_t()> root;
