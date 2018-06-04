@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /ci
+    working_directory: ~/ci
     docker:
       - image: angeart/docker-image-gcc73-cmake3-with-boost
     steps:
@@ -11,6 +11,9 @@ jobs:
           command: |
             mkdir build
             cd build
+      - run:
+          name: where?
+          command: pwd
       - run:
           name: configure
           command: cmake .. -GNinja
