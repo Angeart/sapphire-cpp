@@ -8,15 +8,17 @@ jobs:
       - checkout
       - run:
           name: prepare
-          command: |
-            mkdir build
-            cd build
+          command: mkdir build
       - run:
           name: where?
           command: pwd
       - run:
           name: configure
-          command: cmake .. -GNinja
+          command: |
+            cd build
+            cmake .. -GNinja
       - run:
           name: build
-          command: ninja sapphire
+          command: |
+            cd build
+            ninja sapphire
