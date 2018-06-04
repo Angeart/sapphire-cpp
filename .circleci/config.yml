@@ -31,7 +31,12 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Test
+          name: build
+          command: |
+            cd build
+            ninja sapphire-test
+      - run:
+          name: test
           command: |
             cd build
             ninja test
