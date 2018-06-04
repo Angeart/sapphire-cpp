@@ -32,7 +32,9 @@ jobs:
           at: .
       - run:
           name: Test
-          command: ninja test
+          command: |
+            cd build
+            ninja test
 workflows:
   version: 2
   build_and_test:
