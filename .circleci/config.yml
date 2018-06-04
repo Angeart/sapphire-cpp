@@ -10,9 +10,6 @@ jobs:
           name: prepare
           command: mkdir build
       - run:
-          name: where?
-          command: pwd
-      - run:
           name: configure
           command: |
             cd build
