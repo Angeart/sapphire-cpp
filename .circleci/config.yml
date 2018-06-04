@@ -19,3 +19,25 @@ jobs:
           command: |
             cd build
             ninja sapphire
+      - persist_to_workspace:
+          root: .
+          paths:
+              - .
+  test:
+    working_directory: ~/ci
+    docker:
+      - image: angeart/docker-image-gcc73-cmake3-with-boost
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: ninja test
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
