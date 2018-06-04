@@ -7,5 +7,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name : prepare
-          command: ls
+          name: prepare
+          command: |
+            mkdir build
+            cd build
+      - run:
+          name: configure
+          command: cmake .. -GNinja
+      - run:
+          name: build
+          command: ninja sapphire
