@@ -2,13 +2,13 @@ version: 2
 jobs:
   build:
     working_directory: /ci
-  docker:
-    - image: angeart/docker-image-gcc73-cmake3-with-boost
-  steps:
-    - checkout
-    - run:
-      name : prepare
-      command: |
-        ls -l
-        mkdir build
-        cd build
+    docker:
+      - image: angeart/docker-image-gcc73-cmake3-with-boost
+    steps:
+      - checkout
+      - run:
+        name : prepare
+        command: |
+          ls -l
+          mkdir build
+          cd build
