@@ -2,6 +2,7 @@
 #include "ast/variable.h"
 #include "skipper.hpp"
 #include "identify.hpp"
+#include "core_keywords.hpp"
 #include <boost/fusion/include/std_tuple.hpp>
 #include <boost/spirit/include/phoenix.hpp>
 #include <boost/spirit/include/qi.hpp>
@@ -9,7 +10,7 @@
 #include <string>
 #include <tuple>
 
-namespace sapphire::core{
+namespace sapphire::core {
 namespace parser {
 struct variable_attribute_rule_t : public boost::spirit::qi::symbols<char, ::sapphire::core::types::variable_attribute> {
     variable_attribute_rule_t() {
@@ -29,13 +30,19 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
             using ::sapphire::core::ast::variable_t;
             initializer =
             (
-                qi::omit[qi::lit(":=")] >>
+                qi::omit[keyword::assign] >>
+                skip >>
+                (identifier[qi::_val = qi::_1])
+            );
+            restrainer = 
+            (
+                qi::omit[keyword::dni] >>
                 skip >>
                 (identifier[qi::_val = qi::_1])
             );
             type =
             (
-                qi::omit[qi::lit(":")] >>
+                qi::omit[keyword::colon] >>
                 skip >>
                 (identifier[qi::_val = qi::_1])
             );
@@ -45,9 +52,9 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 (
                     identifier[(&qi::_val)->*&variable_t::name = qi::_1]
                     >> skip
-                    >> -type[(&qi::_val)->*&variable_t::type = qi::_1]
-                    >> initializer[(&qi::_val)->*&variable_t::initializer = qi::_1]
                     >> qi::eps[(&qi::_val)->*&variable_t::type = "auto"]
+                    >> -type[(&qi::_val)->*&variable_t::type = qi::_1]
+                    >> restrainer[(&qi::_val)->*&variable_t::initializer = qi::_1]
                 )
                 //attributed and deduced variable
                 | (
@@ -70,13 +77,14 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 )
             ) >>
             skip >>
-            qi::omit[qi::lit(";")];
+            qi::omit[keyword::semicolon];
         }
     private:
         skipper<iterator> skip;
         one_skipper<iterator> one_skip;
         identify<iterator> identifier;
         boost::spirit::qi::rule<iterator, std::string()> initializer;
+        boost::spirit::qi::rule<iterator, std::string()> restrainer;
         boost::spirit::qi::rule<iterator, std::string()> type;
         boost::spirit::qi::rule<iterator, ::sapphire::core::ast::variable_t()> root;
         variable_attribute_rule_t attribute;
