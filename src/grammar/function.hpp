@@ -13,7 +13,7 @@
 namespace sapphire::core {
 namespace parser {
 template<class iterator>
-class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::ast::function_t> {
+class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::ast::function_t()> {
     public:
         function() : function::base_type(root) {
             namespace qi = boost::spirit::qi;
@@ -21,30 +21,31 @@ class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
             using ::sapphire::core::ast::function_t;
             using ::sapphire::core::ast::function_pattern_t;
             body = (
-                keyword::lcb
+                qi::omit[keyword::lcb]
                 >> skip
-                >> qi::as_string[*(qi::char_ - keyword::rcb)]
+                >> qi::as_string[*(qi::char_ - keyword::rcb)][qi::_val = qi::_1]
                 >> skip
-                >> keyword::rcb
+                >> qi::omit[keyword::rcb]
             );
-            patterns = +(
-                keyword::pipe
+            pattern = (
+                qi::omit[keyword::pipe]
                 >> skip_eol
-                >> qi::as_string[*(qi::char_ - keyword::lcb)]
+                >> qi::as_string[*(qi::char_ - keyword::lcb)][(&qi::_val)->*&function_pattern_t::pattern = qi::_1]
                 >> skip_eol
-                >> body
+                >> body[(&qi::_val)->*&function_pattern_t::body = qi::_1]
             );
+            patterns = +(pattern);
             default_pattern = (
-                keyword::pipe
+                qi::omit[keyword::pipe]
                 >> skip_eol
                 >> body[(&qi::_val)->*&function_pattern_t::body = qi::_1]
             );
             arguments = (
-                keyword::lrb
+                qi::omit[keyword::lrb]
                 >> skip
-                >> qi::as_string[*(qi::char_ - keyword::rrb)]
+                >> qi::as_string[*(qi::char_ - keyword::rrb)][qi::_val = qi::_1]
                 >> skip
-                >> keyword::rrb
+                >> qi::omit[keyword::rrb]
             );
             root = (
                 identifier[(&qi::_val)->*&function_t::name = qi::_1]
@@ -67,6 +68,7 @@ class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
         skipper_with_eol<iterator> skip_eol;
         identify<iterator> identifier;
         boost::spirit::qi::rule<iterator, std::string()> body;
+        boost::spirit::qi::rule<iterator, ::sapphire::core::ast::function_pattern_t()> pattern;
         boost::spirit::qi::rule<iterator, std::vector<::sapphire::core::ast::function_pattern_t>()> patterns;
         boost::spirit::qi::rule<iterator, ::sapphire::core::ast::function_pattern_t()> default_pattern;
         boost::spirit::qi::rule<iterator, std::string()> arguments;
