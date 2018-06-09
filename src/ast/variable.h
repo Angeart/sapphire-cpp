@@ -3,6 +3,7 @@
 #include "types/variable_attribute.h"
 
 #include <string>
+#include <iostream>
 
 namespace sapphire::core::ast {
 struct variable_t : ::util::class_identity<variable_t,base_t> {
@@ -31,4 +32,12 @@ struct variable_t : ::util::class_identity<variable_t,base_t> {
         return !this->operator==(rhs);
     }
 };
+}
+
+std::ostream& operator<<(std::ostream& os, const sapphire::core::ast::variable_t& data) {
+    os << std::endl;
+    os << "name: " << data.name << std::endl;
+    os << "type: " << data.type << std::endl;
+    os << "initializer: " << data.initializer << std::endl;
+    return os;
 }
