@@ -23,7 +23,7 @@ class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
             body = (
                 qi::omit[keyword::lcb]
                 >> skip
-                >> qi::as_string[*(qi::char_ - keyword::rcb)][qi::_val = qi::_1]
+                >> qi::as_string[*(qi::char_ - keyword::rcb - qi::blank)][qi::_val = qi::_1]
                 >> skip
                 >> qi::omit[keyword::rcb]
             );
@@ -38,6 +38,10 @@ class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
             default_pattern = (
                 qi::omit[keyword::pipe]
                 >> skip_eol
+                >> body[(&qi::_val)->*&function_pattern_t::body = qi::_1]
+            );
+            body_only = (
+                skip_eol
                 >> body[(&qi::_val)->*&function_pattern_t::body = qi::_1]
             );
             arguments = (
@@ -58,7 +62,7 @@ class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                         >> skip_eol
                         >> default_pattern[(&qi::_val)->*&function_t::default_pattern = qi::_1]
                     )
-                    | body
+                    | body_only[(&qi::_val)->*&function_t::default_pattern = qi::_1]
                 )
                 >> skip_eol
             );
@@ -71,6 +75,7 @@ class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
         boost::spirit::qi::rule<iterator, ::sapphire::core::ast::function_pattern_t()> pattern;
         boost::spirit::qi::rule<iterator, std::vector<::sapphire::core::ast::function_pattern_t>()> patterns;
         boost::spirit::qi::rule<iterator, ::sapphire::core::ast::function_pattern_t()> default_pattern;
+        boost::spirit::qi::rule<iterator, ::sapphire::core::ast::function_pattern_t()> body_only;
         boost::spirit::qi::rule<iterator, std::string()> arguments;
         boost::spirit::qi::rule<iterator, ::sapphire::core::ast::function_t()> root;
 };
