@@ -1,0 +1,23 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/build; ninja",
+            "group": "build"
+        },
+        {
+            "label": "configure debug",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/build; cmake .. -GNinja -DCMAKE_BUILD_TYPE=Debug"
+        },
+        {
+            "label": "test",
+            "type": "process",
+            "command": "${workspaceFolder}/build/test/sapphire_test"
+        }
+    ]
+}

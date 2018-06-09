@@ -9,7 +9,8 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "includePath": [
-                "${workspaceFolder}"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/build/googletest-src/googletest/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
@@ -26,7 +27,8 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "includePath": [
-                "${workspaceFolder}/src"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/build/googletest-src/googletest/include"
             ],
             "defines": [
                 "_DEBUG",
