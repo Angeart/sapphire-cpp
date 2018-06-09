@@ -27,7 +27,7 @@ TEST(variable_test, auto_declaration) {
     using namespace sapphire::core;
     using ::sapphire::core::types::variable_attribute;
     ast::variable_t require = {variable_attribute::lazy, "test_02", "auto", "hoge"};
-    ASSERT_EQ(require, parse("lazy test_02 := hoge;"));
+    ASSERT_EQ(require, parse("lazy test_02 = hoge;"));
 }
 
 TEST(variable_test, failed_declaration) {
@@ -35,4 +35,11 @@ TEST(variable_test, failed_declaration) {
     using ::sapphire::core::types::variable_attribute;
     ast::variable_t require = {};
     ASSERT_EQ(require, parse("lazy test_02;"));
+}
+
+TEST(variable_test, deduced_declaration) {
+    using namespace sapphire::core;
+    using ::sapphire::core::types::variable_attribute;
+    ast::variable_t require = {variable_attribute::let, "test_03", "auto", "hoge"};
+    ASSERT_EQ(require, parse("test_03 := hoge;"));
 }

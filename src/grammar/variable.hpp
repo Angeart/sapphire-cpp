@@ -55,6 +55,7 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                     >> qi::eps[(&qi::_val)->*&variable_t::type = "auto"]
                     >> -type[(&qi::_val)->*&variable_t::type = qi::_1]
                     >> restrainer[(&qi::_val)->*&variable_t::initializer = qi::_1]
+                    >> qi::eps[(&qi::_val)->*&variable_t::attribute = types::variable_attribute::let]
                 )
                 //attributed and deduced variable
                 | (
