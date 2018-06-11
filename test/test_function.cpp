@@ -1,23 +1,17 @@
 #include "gtest/gtest.h"
+#include "parser.hpp"
 #include "grammar/function.hpp"
 
-namespace {
-using namespace sapphire::core;
-ast::function_t parse(const std::string& source) {
-    parser::function<std::string::const_iterator> rule;
-    auto it = source.begin();
-    const auto& end = source.end();
-    ast::function_t result;
-    if(!boost::spirit::qi::parse(it,end,rule,result) || it != end) {
-        std::cout << "parse failed" << std::endl;
-        return {};
-    }
-    return result;
-}
+using tester = tester_t<::sapphire::core::parser::function>;
+
+TEST(function_test, minimum_declaration) {
+    using namespace sapphire::core;
+    tester::result_type require = {"test_01", "", {}, {"", "body"}, 0};
+    ASSERT_EQ(require, tester::parse("test_01() { body }"));
 }
 
 TEST(function_test, normal_declaration) {
     using namespace sapphire::core;
-    ast::function_t require = {"test_01", "", {}, {"", "body"}, 0};
-    ASSERT_EQ(require, parse("test_01() { body }"));
+    tester::result_type require = {"test_01", "let arg1 : int", {}, {"", "body"}, 0};
+    ASSERT_EQ(require, tester::parse("test_01(let arg1 : int) { body }"));
 }

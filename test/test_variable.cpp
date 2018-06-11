@@ -1,45 +1,33 @@
 #include "gtest/gtest.h"
+#include "parser.hpp"
 #include "grammar/variable.hpp"
 
-namespace {
-using namespace sapphire::core;
-ast::variable_t parse(const std::string& source) {
-    parser::variable<std::string::const_iterator> rule;
-    auto it = source.begin();
-    const auto& end = source.end();
-    ast::variable_t result;
-    if(!boost::spirit::qi::parse(it,end,rule,result) || it != end) {
-        std::cout << "parse failed" << std::endl;
-        return {};
-    }
-    return result;
-}
-}
+using tester = tester_t<::sapphire::core::parser::variable>;
+
 
 TEST(variable_test, normal_declaration) {
     using namespace sapphire::core;
     using ::sapphire::core::types::variable_attribute;
-    ast::variable_t require = {variable_attribute::let, "test_01", "int", ""};
-    EXPECT_EQ(require, parse("let test_01 : int;"));
+    tester::result_type require = {variable_attribute::let, "test_01", "int", ""};
+    EXPECT_EQ(require, tester::parse("let test_01 : int;"));
 }
 
 TEST(variable_test, auto_declaration) {
     using namespace sapphire::core;
     using ::sapphire::core::types::variable_attribute;
-    ast::variable_t require = {variable_attribute::lazy, "test_02", "auto", "hoge"};
-    ASSERT_EQ(require, parse("lazy test_02 = hoge;"));
+    tester::result_type require = {variable_attribute::lazy, "test_02", "auto", "hoge"};
+    ASSERT_EQ(require, tester::parse("lazy test_02 = hoge;"));
 }
 
 TEST(variable_test, failed_declaration) {
     using namespace sapphire::core;
     using ::sapphire::core::types::variable_attribute;
-    ast::variable_t require = {};
-    ASSERT_EQ(require, parse("lazy test_02;"));
+    ASSERT_THROW(tester::parse("lazy test_02;"), error::unable_parse);
 }
 
 TEST(variable_test, deduced_declaration) {
     using namespace sapphire::core;
     using ::sapphire::core::types::variable_attribute;
-    ast::variable_t require = {variable_attribute::let, "test_03", "auto", "hoge"};
-    ASSERT_EQ(require, parse("test_03 := hoge;"));
+    tester::result_type require = {variable_attribute::let, "test_03", "auto", "hoge"};
+    ASSERT_EQ(require, tester::parse("test_03 := hoge;"));
 }
