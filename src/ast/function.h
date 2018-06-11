@@ -73,3 +73,20 @@ BOOST_FUSION_ADAPT_STRUCT (
     (std::string, pattern),
     (std::string, body)
 );
+
+std::ostream& operator<<(std::ostream& os, const sapphire::core::ast::function_pattern_t& data) {
+    os << " pattern: " << data.pattern << std::endl;
+    os << " body: " << data.body << std::endl;
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const sapphire::core::ast::function_t& data) {
+    os << "name: " << data.name << std::endl;
+    os << "arguments: " << data.arguments << std::endl;
+    os << "patterns" << std::endl;
+    for(const auto& pattern : data.patterns)
+        os << pattern << std::endl;
+    os << "default_pattern" << std::endl;
+    os << data.default_pattern << std::endl;
+    return os;
+}
