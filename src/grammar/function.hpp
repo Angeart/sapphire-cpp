@@ -30,7 +30,7 @@ class function : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
             pattern = (
                 qi::omit[keyword::pipe]
                 >> skip_eol
-                >> qi::as_string[*(qi::char_ - keyword::lcb)][(&qi::_val)->*&function_pattern_t::pattern = qi::_1]
+                >> qi::as_string[*(qi::char_ - keyword::lcb - qi::blank)][(&qi::_val)->*&function_pattern_t::pattern = qi::_1]
                 >> skip_eol
                 >> body[(&qi::_val)->*&function_pattern_t::body = qi::_1]
             );
