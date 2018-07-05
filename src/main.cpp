@@ -1,22 +1,44 @@
 #include <iostream>
-#include "grammar/import.hpp"
+#include "grammar/function.hpp"
+#include "grammar/skipper.hpp"
+
+namespace detail {
+
+namespace error {
+struct unable_parse {};
+}
+template<
+  template<class iterator, class skipper> class rule_t
+, class iterator_t = std::string::const_iterator
+, class skipper_t = sapphire::core::parser::skipper<iterator_t>
+, class result_t = typename rule_t<iterator_t, skipper_t>::start_type::attr_type
+>
+struct tester_t {
+    using result_type = result_t;
+    static result_t parse(const std::string& input) {
+        skipper_t skipper;
+        rule_t<iterator_t,skipper_t> rule;
+        result_t result;
+        auto it = input.begin();
+        const auto& end = input.end();
+        if(!boost::spirit::qi::phrase_parse(it,end,rule,skipper,result) || it != end) {
+            std::cout << "parse failed" << std::endl;
+            std::cout << std::string(it,end) << std::endl;
+            // throw error::unable_parse();
+            return {};
+        }
+        return result;
+    }
+};
+}
+
+using tester_t = detail::tester_t<sapphire::core::parser::function>;
 
 int main() {
-    sapphire::core::parser::import<std::string::const_iterator> rule;
-    const std::string source = "import TestModule1, TestModule2;";
+    const std::string source = "test_03(let arg1 : int) | pattern1 { pattern_body } | { default }";
     std::cout << "input : " << source << std::endl;
     std::cout << "====================================" << std::endl;
-    auto it = source.begin();
-    const auto& end = source.end();
-    sapphire::core::ast::import_t result;
-    if(!boost::spirit::qi::parse(it,end,rule,result) || it != end) {
-        std::cout << "parse failed" << std::endl;
-        std::cout << *it << std::endl;
-    }
-    std::string fstr = "", mstr = "";
-    for(auto f : result.functions) { fstr += f; }
-    for(auto m : result.modules) { mstr += m; }
-    std::cout << "functions : " << fstr << std::endl;
-    std::cout << "modules : " << mstr << std::endl;
+    tester_t::result_type result = tester_t::parse(source);
+    std::cout << result << std::endl;
 
 }

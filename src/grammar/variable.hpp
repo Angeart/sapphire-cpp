@@ -1,6 +1,5 @@
 #pragma once
 #include "ast/variable.h"
-#include "skipper.hpp"
 #include "identify.hpp"
 #include "core_keywords.hpp"
 #include <boost/fusion/include/std_tuple.hpp>
@@ -21,8 +20,8 @@ struct variable_attribute_rule_t : public boost::spirit::qi::symbols<char, ::sap
         ;
     }
 };
-template<class iterator>
-class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::ast::variable_t()> {
+template<class iterator_t, class skipper_t>
+class variable : public boost::spirit::qi::grammar<iterator_t, skipper_t, ::sapphire::core::ast::variable_t()> {
     public:
         variable() : variable::base_type(root) {
             namespace qi = boost::spirit::qi;
@@ -31,19 +30,16 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
             initializer =
             (
                 qi::omit[keyword::assign] >>
-                skip >>
                 (identifier[qi::_val = qi::_1])
             );
-            restrainer = 
+            restrainer =
             (
                 qi::omit[keyword::dni] >>
-                skip >>
                 (identifier[qi::_val = qi::_1])
             );
             type =
             (
                 qi::omit[keyword::colon] >>
-                skip >>
                 (identifier[qi::_val = qi::_1])
             );
             root =
@@ -51,7 +47,6 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 //deduced attribute variable
                 (
                     identifier[(&qi::_val)->*&variable_t::name = qi::_1]
-                    >> skip
                     >> qi::eps[(&qi::_val)->*&variable_t::type = "auto"]
                     >> -type[(&qi::_val)->*&variable_t::type = qi::_1]
                     >> restrainer[(&qi::_val)->*&variable_t::initializer = qi::_1]
@@ -60,34 +55,25 @@ class variable : public boost::spirit::qi::grammar<iterator, ::sapphire::core::a
                 //attributed and deduced variable
                 | (
                     attribute[(&qi::_val)->*&variable_t::attribute = qi::_1]
-                    >> one_skip
                     >> identifier[(&qi::_val)->*&variable_t::name = qi::_1]
-                    >> skip
                     >> initializer[(&qi::_val)->*&variable_t::initializer = qi::_1]
                     >> qi::eps[(&qi::_val)->*&variable_t::type = "auto"]
                 )
                 //typed variable
                 | (
                     attribute[(&qi::_val)->*&variable_t::attribute = qi::_1]
-                    >> one_skip
                     >> identifier[(&qi::_val)->*&variable_t::name = qi::_1]
-                    >> skip
                     >> type[(&qi::_val)->*&variable_t::type = qi::_1]
-                    >> skip
                     >> -initializer[(&qi::_val)->*&variable_t::initializer = qi::_1]
                 )
-            ) >>
-            skip >>
-            qi::omit[keyword::semicolon];
+            );
         }
     private:
-        skipper<iterator> skip;
-        one_skipper<iterator> one_skip;
-        identify<iterator> identifier;
-        boost::spirit::qi::rule<iterator, std::string()> initializer;
-        boost::spirit::qi::rule<iterator, std::string()> restrainer;
-        boost::spirit::qi::rule<iterator, std::string()> type;
-        boost::spirit::qi::rule<iterator, ::sapphire::core::ast::variable_t()> root;
+        identify<iterator_t> identifier;
+        boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> initializer;
+        boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> restrainer;
+        boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> type;
+        boost::spirit::qi::rule<iterator_t, skipper_t, ::sapphire::core::ast::variable_t()> root;
         variable_attribute_rule_t attribute;
 };
 }
