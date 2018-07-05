@@ -22,4 +22,5 @@ const auto rb = detail::keyword("]");        // right square bracket
 const auto lcb = detail::keyword("{");       // left curly brace
 const auto rcb = detail::keyword("}");       // right curly brace
 const auto pipe = detail::keyword("|");
+const auto comma = detail::keyword(",");
 }
