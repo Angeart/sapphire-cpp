@@ -19,6 +19,27 @@
             "intelliSenseMode": "clang-x64"
         },
         {
+            "name": "Mac",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/Library/Developer/CommandLineTools/usr/include/c++/v1/",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/build/googletest-src/googletest/include",
+                "/usr/include",
+                "/usr/local/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang++",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        },
+        {
             "name": "Win32",
             "browse": {
                 "path": [
