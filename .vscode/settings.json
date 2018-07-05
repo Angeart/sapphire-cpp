@@ -63,6 +63,7 @@
         "__tree": "cpp",
         "array": "cpp",
         "bitset": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "__locale": "cpp"
     }
 }
