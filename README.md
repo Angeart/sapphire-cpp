@@ -11,6 +11,9 @@ compiler of sapphire by c++
 ## development
 
 ### require
+* cpp standard
+    * c++17 (201703) or more
+        > recommend g++-8 when you use Mac.
 * tools
     * cmake > 3.10
 * libraries
