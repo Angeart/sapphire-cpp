@@ -25,11 +25,10 @@ class import : public boost::spirit::qi::grammar<iterator_t, skipper_t, ::sapphi
                 (
                     separated_str[(&qi::_val)->*&import_t::functions = qi::_1]
                     >> qi::lit("of")
-                    >> separated_str[(&qi::_val)->*&import_t::modules = qi::_1]
+                    >> identifier[ph::push_back((&qi::_val)->*&import_t::modules,qi::_1)]
                 )
                 | separated_str[(&qi::_val)->*&import_t::modules = qi::_1][ph::clear((&qi::_val)->*&import_t::functions)]
                 )
-                >> qi::omit[keyword::semicolon]
             );
         }
     private:

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "grammar/function.hpp"
+#include "grammar/sapphire.hpp"
 #include "grammar/skipper.hpp"
 
 namespace detail {
@@ -32,10 +32,10 @@ struct tester_t {
 };
 }
 
-using tester_t = detail::tester_t<sapphire::core::parser::function>;
+using tester_t = detail::tester_t<sapphire::core::parser::sapphire>;
 
 int main() {
-    const std::string source = "test_03(let arg1 : int) | pattern1 { pattern_body } | { default }";
+    const std::string source = "import Test2;";
     std::cout << "input : " << source << std::endl;
     std::cout << "====================================" << std::endl;
     tester_t::result_type result = tester_t::parse(source);

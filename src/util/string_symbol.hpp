@@ -41,6 +41,8 @@ namespace util
 				{ key_pool().erase(key); }
 			static void pool_erase(const basic_symbol& sym)
 				{ key_pool().erase(sym.key()); }
+			static void pool_clear()
+				{ key_pool().clear(); }
 
 		private:
 			typedef std::set<key_type, Comp> pool_allocator;
