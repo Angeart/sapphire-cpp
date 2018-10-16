@@ -10,18 +10,21 @@
             "request": "launch",
             "program": "${workspaceRoot}/build/src/sapphire",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
+            "externalConsole": false,
+            "MIMode": "lldb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "logging": {
+                "engineLogging": true
+            }
         },
         {
             "name": "test",
