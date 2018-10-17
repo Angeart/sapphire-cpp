@@ -1,8 +1,9 @@
 # <img src="./assets/logo.svg" width="50%">
 
-|||
-|---|---|
-state | [![CircleCI](https://circleci.com/gh/Angeart/sapphire-cpp/tree/master.svg?style=svg)](https://circleci.com/gh/Angeart/sapphire-cpp/tree/master)
+ [![CircleCI](https://circleci.com/gh/Angeart/sapphire-cpp/tree/master.svg?style=shield)](https://circleci.com/gh/Angeart/sapphire-cpp/tree/master)
+![GitHub issues](https://img.shields.io/github/issues/Angeart/sapphire-cpp.svg)
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/Angeart/sapphire-cpp.svg?columns=all)](https://waffle.io/Angeart/sapphire-cpp)
+![GitHub](https://img.shields.io/github/license/Angeart/sapphire-cpp.svg)
 
 ## desc
 compiler of sapphire by c++
