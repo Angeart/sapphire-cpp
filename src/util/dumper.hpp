@@ -81,11 +81,11 @@ namespace util {
             detail::is_dumpable<target_t>()
         , void> {
             auto tree = d.dump();
-            //std::stringstream ss;
-            //boost::property_tree::write_json(ss, tree);
-            //std::cout << get_name(name) << std::endl;
-            //std::cout << ss.str() << std::endl;
-            root.add_child(get_name(name), tree);
+            auto current_name = get_name(name);
+            if(current_name.size() == 0u)
+                root = tree;
+            else
+                root.add_child(current_name, tree);
         };
         template<class target_t>
         auto operator()(const target_t& d, const std::string& name = empty_string)
@@ -98,7 +98,7 @@ namespace util {
             ptree child;
             for(auto &item : d) {
                 dumper_t temp{""};
-                temp(item,"value");
+                temp(item,"");
                 child.push_back(std::make_pair("",temp.root));
             }
             root.add_child(get_name(name), child);
@@ -134,9 +134,10 @@ namespace util {
             }
         }
     private:
-        std::string&& get_name(const std::string& name) const {
-            std::string result = (basename.size() == 0u ? "" : (basename + ".")) + name;
-            return std::move(result);
+        std::string get_name(const std::string& name) const {
+            std::string result = (basename.size() == 0u ? "" : (basename + "."));
+            result += name;
+            return result;
         }
 
     };

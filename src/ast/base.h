@@ -50,16 +50,16 @@ BOOST_PP_IF(n, BOOST_PP_COMMA, BOOST_PP_EMPTY)() dumper(this->BOOST_PP_TUPLE_ELE
 BOOST_PP_REPEAT(BOOST_PP_SEQ_SIZE(seq),SAPPHIRE_AST_DEF_DUMP_INTERNAL_SEQ, seq)
 
 #define SAPPHIRE_AST_DEF_DUMP(name, seq) \
-virtual boost::property_tree::ptree dump() const { \
-    util::dumper_t dumper{#name}; \
+virtual boost::property_tree::ptree dump(std::string basename = "") const { \
+    util::dumper_t dumper{basename}; \
     SAPPHIRE_AST_DEF_DUMP_INTERNAL(seq); \
     return dumper.root; \
 } \
-std::string&& to_string() const { \
+std::string to_string() const { \
     std::stringstream ss; \
-    auto tree = this->dump(); \
+    auto tree = this->dump("root"); \
     boost::property_tree::write_json(ss, tree); \
-    return std::move(ss.str()); \
+    return ss.str(); \
 }
 
 #define SAPPHIRE_AST_DEF_NO_COMPALISON 0

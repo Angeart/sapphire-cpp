@@ -35,10 +35,13 @@ struct tester_t {
 using tester_t = detail::tester_t<sapphire::core::parser::sapphire>;
 
 int main() {
-    const std::string source = "import Test2;";
-    std::cout << "input : " << source << std::endl;
-    std::cout << "====================================" << std::endl;
-    tester_t::result_type result = tester_t::parse(source);
-    result.to_string();
+    while(std::cin) {
+        std::string source;
+        std::getline(std::cin, source);
+        std::cout << "input : " << source << std::endl;
+        std::cout << "====================================" << std::endl;
+        tester_t::result_type result = tester_t::parse(source);
+        std::cout << result.to_string() << std::endl;
+    }
 
 }
