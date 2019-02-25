@@ -5,6 +5,7 @@
 #include <boost/optional.hpp>
 #include <boost/core/demangle.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <boost/variant/variant.hpp>
 
 
 #include <boost/property_tree/json_parser.hpp>
@@ -59,6 +60,18 @@ namespace util {
         constexpr auto is_optional() -> bool { return is_optional_t<target_t>::value; }
 
         template<class target_t>
+        struct is_variant_t : public std::false_type {};
+
+        template<class ...target_t>
+        struct is_variant_t<boost::variant<target_t...>> : public std::true_type {};
+
+        template<class ...target_t>
+        struct is_variant_t<const boost::variant<target_t...>> : public std::true_type {};
+
+        template<class ...target_t>
+        constexpr auto is_variant() -> bool { return is_variant_t<target_t...>::value; }
+
+        template<class target_t>
         std::string type2str() {
             std::stringstream ss;
             ss << "[" << boost::core::demangle(typeid(target_t).name()) << "]";
@@ -110,6 +123,7 @@ namespace util {
             && !detail::is_streamable<target_t>()
             && !detail::is_iterable<target_t>()
             && !detail::is_optional<target_t>()
+            && !detail::is_variant_t<target_t>()
         , void> {
             root.put(get_name(name), "can not show a content.");
         };
@@ -119,6 +133,7 @@ namespace util {
             !detail::is_dumpable<target_t>()
             && detail::is_streamable<target_t>()
             && !detail::is_optional<target_t>()
+            && !detail::is_variant_t<target_t>()
         , void> {
             root.put(get_name(name), d);
         }
@@ -133,6 +148,27 @@ namespace util {
                 this->operator()(*d, name);
             }
         }
+
+    private:
+        struct dump_visitor_t : boost::static_visitor<> {
+            dumper_t& context;
+            dump_visitor_t(dumper_t& ctx) : context(ctx) {}
+            template<class T>
+            void operator()(T const& item) {
+                context(item);
+            }
+        };
+    public:
+
+        template<class target_t>
+        auto operator()(const target_t& d, const std::string& name = empty_string)
+        -> std::enable_if_t<
+            detail::is_variant<target_t>()
+        , void> {
+            auto visitor = dump_visitor_t{*this};
+            boost::apply_visitor(visitor, d);
+        }
+
     private:
         std::string get_name(const std::string& name) const {
             std::string result = (basename.size() == 0u ? "" : (basename + "."));

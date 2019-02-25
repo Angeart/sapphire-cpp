@@ -30,6 +30,8 @@ class import : public boost::spirit::qi::grammar<iterator_t, skipper_t, ::sapphi
                 | separated_str[(&qi::_val)->*&import_t::modules = qi::_1][ph::clear((&qi::_val)->*&import_t::functions)]
                 )
             );
+            // root.name("i:root");
+            // qi::debug(root);
         }
     private:
         identify<iterator_t> identifier;

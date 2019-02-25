@@ -1,17 +1,15 @@
 #pragma once
 #include "ast/variable.h"
 #include "identify.hpp"
-#include "core_keywords.hpp"
+#include "base.hpp"
 #include <boost/fusion/include/std_tuple.hpp>
-#include <boost/spirit/include/phoenix.hpp>
-#include <boost/spirit/include/qi.hpp>
 #include <cstdint>
 #include <string>
 #include <tuple>
 
 namespace sapphire::core {
 namespace parser {
-struct variable_attribute_rule_t : public boost::spirit::qi::symbols<char, ::sapphire::core::types::variable_attribute> {
+struct variable_attribute_rule_t : public qi::symbols<char, ::sapphire::core::types::variable_attribute> {
     variable_attribute_rule_t() {
         namespace types = ::sapphire::core::types;
         add ("let", types::variable_attribute::let)
@@ -21,11 +19,9 @@ struct variable_attribute_rule_t : public boost::spirit::qi::symbols<char, ::sap
     }
 };
 template<class iterator_t, class skipper_t>
-class variable : public boost::spirit::qi::grammar<iterator_t, skipper_t, ::sapphire::core::ast::variable_t()> {
+class variable : public qi::grammar<iterator_t, skipper_t, ::sapphire::core::ast::variable_t()> {
     public:
         variable() : variable::base_type(root) {
-            namespace qi = boost::spirit::qi;
-            namespace ph = boost::phoenix;
             using ::sapphire::core::ast::variable_t;
             initializer =
             (
@@ -70,10 +66,10 @@ class variable : public boost::spirit::qi::grammar<iterator_t, skipper_t, ::sapp
         }
     private:
         identify<iterator_t> identifier;
-        boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> initializer;
-        boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> restrainer;
-        boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> type;
-        boost::spirit::qi::rule<iterator_t, skipper_t, ::sapphire::core::ast::variable_t()> root;
+        qi::rule<iterator_t, skipper_t, std::string()> initializer;
+        qi::rule<iterator_t, skipper_t, std::string()> restrainer;
+        qi::rule<iterator_t, skipper_t, std::string()> type;
+        qi::rule<iterator_t, skipper_t, ::sapphire::core::ast::variable_t()> root;
         variable_attribute_rule_t attribute;
 };
 }

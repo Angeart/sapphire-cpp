@@ -17,6 +17,8 @@ set(test_sources
 test_variable.cpp
 test_function.cpp
 test_import.cpp
+test_one_statement.cpp
+test_comment.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})

@@ -1,5 +1,6 @@
 #pragma once
 #include "base.h"
+#include "variable.h"
 #include "util/enum_bitset.hpp"
 #include "types/function_attribute.h"
 #include <boost/dynamic_bitset.hpp>
@@ -15,7 +16,7 @@ SAPPHIRE_AST_DEF(function_pattern_t,
 
 SAPPHIRE_AST_DEF(function_t,
     (std::string, name),
-    (std::string, arguments),
+    (std::vector<variable_t>, arguments),
     (std::vector<function_pattern_t>, patterns),
     (function_pattern_t, default_pattern),
     (util::enum_bitset<::sapphire::core::types::function_attribute>, attributes)

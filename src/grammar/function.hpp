@@ -1,6 +1,7 @@
 #pragma once
 #include "ast/function.h"
 #include "identify.hpp"
+#include "variable.hpp"
 #include "core_keywords.hpp"
 #include <boost/fusion/include/std_tuple.hpp>
 #include <boost/spirit/include/phoenix.hpp>
@@ -39,7 +40,7 @@ class function : public boost::spirit::qi::grammar<iterator_t, skipper_t, ::sapp
             );
             arguments = (
                 qi::omit[keyword::lrb]
-                >> qi::no_skip[qi::as_string[*(qi::char_ - keyword::rrb)][qi::_val = qi::_1]]
+                >> (*((variable_ - keyword::rrb) >> qi::omit[*(keyword::comma)]))[qi::_val = qi::_1]
                 >> qi::omit[keyword::rrb]
             );
             root = (
@@ -54,14 +55,15 @@ class function : public boost::spirit::qi::grammar<iterator_t, skipper_t, ::sapp
                 )
             );
         }
-      private:
+    private:
         identify<iterator_t> identifier;
+        variable<iterator_t, skipper_t> variable_;
         boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> body;
         boost::spirit::qi::rule<iterator_t, skipper_t, ::sapphire::core::ast::function_pattern_t()> pattern;
         boost::spirit::qi::rule<iterator_t, skipper_t, std::vector<::sapphire::core::ast::function_pattern_t>()> patterns;
         boost::spirit::qi::rule<iterator_t, skipper_t, ::sapphire::core::ast::function_pattern_t()> default_pattern;
         boost::spirit::qi::rule<iterator_t, skipper_t, ::sapphire::core::ast::function_pattern_t()> body_only;
-        boost::spirit::qi::rule<iterator_t, skipper_t, std::string()> arguments;
+        boost::spirit::qi::rule<iterator_t, skipper_t, std::vector<::sapphire::core::ast::variable_t>()> arguments;
         boost::spirit::qi::rule<iterator_t, skipper_t, ::sapphire::core::ast::function_t()> root;
 };
 }

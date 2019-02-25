@@ -24,6 +24,7 @@ struct tester_t {
         if(!boost::spirit::qi::phrase_parse(it,end,rule,skipper,result) || it != end) {
             std::cout << "parse failed" << std::endl;
             std::cout << std::string(it,end) << std::endl;
+            std::cout << "dist: " << std::distance(it, end) << std::endl;
             // throw error::unable_parse();
             return {};
         }

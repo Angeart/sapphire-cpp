@@ -1,3 +1,5 @@
 mkdir -p ./build
-cd build
+pushd build
 cmake .. -DBOOST_ROOT=/opt/boost -GNinja
+ninja
+popd

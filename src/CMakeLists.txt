@@ -27,7 +27,8 @@ set(serial_so "1")
 
 #set include directories
 message("project directory : ${PROJECT_SOURCE_DIR}/src")
-include_directories(${PROJECT_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})
+set(include_dir ${PROJECT_SOURCE_DIR}/src)
+include_directories(${include_dir} ${Boost_INCLUDE_DIRS})
 
 #set sources
 set(sapphire_sources_without_main
@@ -51,3 +52,13 @@ endif()
 if(CMAKE_THREAD_LIBS_INIT)
   target_link_libraries(sapphire "${CMAKE_THREAD_LIBS_INIT}")
 endif()
+
+set(preprocess_file ${CMAKE_BINARY_DIR}/preprocessed.cpp)
+
+add_custom_command(
+  OUTPUT ${preprocess_file}
+  COMMAND g++ -std=c++1z -E ${sapphire_sources} -I ${include_dir} -I ${Boost_INCLUDE_DIRS} > ${preprocess_file}
+  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+add_custom_target(preprocess DEPENDS ${preprocess_file})

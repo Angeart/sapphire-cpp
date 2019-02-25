@@ -88,6 +88,15 @@ bool operator!= (const name& rhs) const { \
     return !this->operator==(rhs); \
 }
 
+#define SAPPHIRE_AST_DEF_STREAM_FRIEND(name) \
+friend std::ostream& operator<<(std::ostream& os, const name& ast);\
+
+#define SAPPHIRE_AST_DEF_STREAM_SUPPORT(name) \
+inline std::ostream& operator<<(std::ostream& os, const name& ast) { \
+    os << ast.to_string(); \
+    return os; \
+} \
+
 #define SAPPHIRE_AST_DEF_I(name, seq) \
 namespace sapphire::core::ast { \
     struct name : ::util::class_identity<name,base_t> { \
@@ -96,7 +105,9 @@ namespace sapphire::core::ast { \
         SAPPHIRE_AST_DEF_CONSTRUCTOR_ASSIGNNABLE(name, seq) \
         SAPPHIRE_AST_DEF_DUMP(name, seq) \
         SAPPHIRE_AST_DEF_COMPALISON(name, seq) \
+        SAPPHIRE_AST_DEF_STREAM_FRIEND(name) \
     }; \
+    SAPPHIRE_AST_DEF_STREAM_SUPPORT(name) \
 }
 
 #define SAPPHIRE_AST_DEF(name, ...) SAPPHIRE_AST_DEF_I(name, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))

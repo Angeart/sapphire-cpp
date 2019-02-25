@@ -4,5 +4,5 @@
 #include <vector>
 
 SAPPHIRE_AST_DEF(sapphire_t,
-    (std::vector<all_statement_t>, statements)
+    (all_statement_t, statements)
 )
